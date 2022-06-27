@@ -1,0 +1,21 @@
+.container {  display: grid;
+  grid-template-columns: 0.6fr 1.4fr 1fr;
+  grid-template-rows: min-content min-content min-content;
+  grid-auto-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "header header header"
+    "entry-area results results"
+    "footer footer footer";
+}
+
+.header { grid-area: header; }
+
+.entry-area {
+  align-self: auto;
+  grid-area: entry-area;
+}
+
+.results { grid-area: results; }
+
+.footer { grid-area: footer; }

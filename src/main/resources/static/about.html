@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--<script src="test.js">
+        </script>
+        -->
+    <title>Rongrong's Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js">
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/layout2.css">
+
+</head>
+
+<body>
+    
+    <div class="container">
+        <div class="header">
+            <h1>WA Valley Communications Dashboard</h1>
+            <div class="nav">
+            <ul>
+                <li><a href="index.html">Department Data</a></li>
+                <li><a href="call.html">Call Type Data</a></li>
+                <li><a class="active" href="about.html">About</a></li>
+                <li><a href="https://linkedin.com">Hire Me!</a></li>
+            </ul>
+            </div>
+            <br>
+            <br>
+            <h2>About This Page and Me - Rachel Wei</h2>
+
+        </div>
+        
+        <div class="main">
+            <p>[Add a Description Here]</p>
+        </div>
+
+        <div class="footer"></div>
+
+
+    <script>
+        const getHourly = async function (callType) {
+            let url = '/hourly/' + callType;
+            let request = await fetch(url);
+            let hourlyData = await request.json();
+            return hourlyData;
+        };
+
+        // set up chart data
+        let hourlyData = getHourly('SHOOTING').then(function (response) {
+            // console.log(response);
+            let timeLabels = Array();
+            let callCounts = Array();
+
+            for (ix in response) {
+                let element = response[ix];
+                let label = element['hour'] + ' ' + element['am_pm'];
+                timeLabels.push(label);
+                callCounts.push(element['countno']);
+            }
+            const ctx = document.getElementById('myChart');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: timeLabels,
+                    datasets: [{
+                        label: '# of Calls',
+                        data: callCounts,
+                        /*backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        */
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+
+
+    </script>
+
+    <script>
+        function tableMaker(jsonData) {
+            let table = `<table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Call Type</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>`
+
+            for (ix in jsonData) {
+                calltype = jsonData[ix]['CallType'];
+                count = jsonData[ix]['countno'];
+                table += `<tr>
+                        <td>${calltype}</td>
+                        <td>${count}</td>
+                    </tr>`;
+            }
+            table += '</table>';
+            return table
+        }
+        const btn = document.querySelector('#btn');
+        const sb = document.querySelector('#department');
+        btn.onclick = async (event) => {
+            event.preventDefault();
+            // show the selected index
+            // alert(sb.value);
+            let url = '/agency/' + sb.value;
+            let request = await fetch(url);
+            let crimeData = await request.json();
+            // console.log(crimeData);
+            document.getElementById("table").innerHTML = tableMaker(crimeData);
+            
+            let tableTitle = "<h3>" + sb.options[sb.selectedIndex].text + "</h3>" + "<p>Calls counts for the most recent 7 days</p>";
+            document.getElementById("tableTitle").innerHTML = tableTitle;
+
+        };
+
+        
+    </script>
+
+    <!--
+        <h2></h2>
+        <a href="https://www.google.com">mylink</a>s
+        <br>
+        <img src="testPicture.jpeg">
+        -->
+</body>
+
+
+
+
+</html>

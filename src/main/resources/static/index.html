@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--<script src="test.js">
+        </script>
+        -->
+    <title>Rongrong's Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js">
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/layout1.css">
+
+</head>
+
+<body>
+    
+    <div class="container">
+        <div class="header">
+            <h1>WA Valley Communications Dashboard</h1>
+            <div class="nav">
+            <ul>
+                <li><a class="active" href="index.html">Department Data</a></li>
+                <li><a href="call.html">Call Type Data</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="https://linkedin.com">Hire Me!</a></li>
+            </ul>
+            </div>
+            <br>
+            <br>
+            <h2>Police Department Statistics</h2>
+            <p>[Add a Description Here]</p>
+
+        </div>
+        <div class="entry-area">
+            <form>
+                <label for="department">Choose a department:</label>
+                <select name="department" id="department">
+                    <option value="LP">City of Algona Police</option>
+                    <option value="AP">City of Auburn Police</option>
+                    <option value="BP">City of Black Diamond Police</option>
+                    <option value="DP">City of Des Moines</option>
+                    <option value="KP">City of Kent Police</option>
+                    <option value="WP">City of Federal Way Police</option>
+                    <option value="PP">City of Pacific Police</option>
+                    <option value="RP">City of Renton Police</option>
+                    <option value="TP">City of Tukwila Police</option>
+                </select>
+                <br><br>
+                <button id="btn">Get Department Info</button>
+            </form>
+        </div>
+
+        <div class="results">
+            <div id="crimeDataDescription"></div>
+            <div id="tableTitle"></div>
+            <div id="table">
+                <h3>Select a Department in the Dropdown</h3>
+            </div>
+        </div>
+
+        <div class="footer"></div>
+    </div>
+
+
+    <script>
+        function tableMaker(jsonData) {
+            let table = `<table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Call Type</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>`
+
+            for (ix in jsonData) {
+                calltype = jsonData[ix]['CallType'];
+                count = jsonData[ix]['countno'];
+                table += `<tr>
+                        <td>${calltype}</td>
+                        <td>${count}</td>
+                    </tr>`;
+            }
+            table += '</table>';
+            return table
+        }
+        const btn = document.querySelector('#btn');
+        const sb = document.querySelector('#department');
+        btn.onclick = async (event) => {
+            event.preventDefault();
+            // show the selected index
+            // alert(sb.value);
+            let url = '/agency/' + sb.value;
+            let request = await fetch(url);
+            let crimeData = await request.json();
+            // console.log(crimeData);
+            document.getElementById("table").innerHTML = tableMaker(crimeData);
+            
+            let tableTitle = "<h3>" + sb.options[sb.selectedIndex].text + "</h3>" + "<p>Calls counts for the most recent 7 days</p>";
+            document.getElementById("tableTitle").innerHTML = tableTitle;
+
+        };
+
+        
+    </script>
+
+    <!--
+        <h2></h2>
+        <a href="https://www.google.com">mylink</a>s
+        <br>
+        <img src="testPicture.jpeg">
+        -->
+</body>
+
+
+
+
+</html>
